@@ -1,23 +1,14 @@
-# Composer Template
------------------------------------
-Boilerplate package for creating other raadaa packages.
+# LiteFrame Core
+Core files for LiteFrame project.
 
 ## Requirements
--------------------
-PHP 5.4 and above
+PHP 5.5 and above
 
 ## Installation
--------------------
-`composer require raadaa/composer-template`
-
-## Documentation
------------------------
-* [Online documentation here](#) (Recommended)
-* [Download as pdf here](#) (Not always up to date)
+`composer require liteframe/liteframe`
 
 
 ## How to Contribute
------------------------
 * Fork the project.
 * Make your bug fix or feature addition.
 * Add tests for it. This is important so we don't break it in a future version unintentionally.
@@ -25,7 +16,6 @@ PHP 5.4 and above
 
 
 ## Coding Guidelines
-
 Use [php-cs-fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to (re)format your sourcecode for compliance with this project's coding guidelines:
 
 ```bash
