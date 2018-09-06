@@ -35,9 +35,12 @@ class Paginator extends Collection
 
         $html = '<ul class="' . $list_class . '">';
 
-        $lclass = ($this->page == 1) ? "disabled" : "";
         $llinks = http_build_query($this->getLinkPrams(['page' => ($this->page - 1)]));
-        $html .= "<li class='$lclass'><a href='?$llinks'>&laquo;</a></li>";
+        if ($this->page == 1) {
+            $html .= "<li class='disabled'><a>&laquo;</a></li>";
+        } else {
+            $html .= "<li class=''><a href='?$llinks'>&laquo;</a></li>";
+        }
 
         if ($start > 1) {
             $links = http_build_query($this->getLinkPrams(['page' => 1]));
@@ -57,9 +60,12 @@ class Paginator extends Collection
             $html .= "<li><a href='?$links'>$last</a></li>";
         }
 
-        $rclass = ($this->page == $last) ? "disabled" : "";
         $rlinks = http_build_query($this->getLinkPrams(['page' => ($this->page + 1)]));
-        $html .= "<li class='$rclass'><a href='?$rlinks'>&raquo;</a></li>";
+        if ($this->page == $last) {
+            $html .= "<li class='disabled'><a>&raquo;</a></li>";
+        } else {
+            $html .= "<li class=''><a href='?$rlinks'>&raquo;</a></li>";
+        }
         $html .= '</ul>';
 
         return $html;
