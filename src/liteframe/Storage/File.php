@@ -2,8 +2,12 @@
 
 namespace LiteFrame\Storage;
 
-class File
-{
+use Symfony\Component\HttpFoundation\File\File;
+use function basePath;
+use function config;
+
+class File extends File {
+
     protected $absolutePath;
     protected $relativePath;
 
@@ -11,10 +15,11 @@ class File
      * Create file object
      * @param type $path relative path to project directory
      */
-    public function __construct($path)
-    {
+    public function __construct($path, $checkPath = true) {
+
         $this->absolutePath = $path ? basePath($path) : null;
         $this->relativePath = $this->resolveRelativePath($path);
+        parent::__construct($this->absolutePath, $checkPath);
     }
 
     private function resolveRelativePath($path)

@@ -8,14 +8,16 @@ use LiteFrame\Http\Routing\Route;
 use LiteFrame\Storage\Server;
 use LiteFrame\Storage\Session;
 use LogicException;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use function config;
 
 /**
  * Description of Request.
  *
  * @author Victor Anuebunwa
  */
-final class Request
-{
+final class Request {
+
     protected static $instance;
     protected $routeUrl;
     protected $route;
@@ -23,9 +25,19 @@ final class Request
     protected $baseDir;
     protected $ajax;
     protected $content;
+    protected $request;
+    protected $routeParams = [];
 
     private function __construct()
     {
+        //Check route parameters
+        $route = $this->getRoute();
+        if ($route) {
+            $this->routeParams = $route->getParameters();
+        }
+
+        $this->request = SymfonyRequest::createFromGlobals();
+        $this->request->attributes->add($this->routeParams);
     }
 
     /**
@@ -40,6 +52,14 @@ final class Request
         }
 
         return static::$instance;
+    }
+
+    /**
+     * 
+     * @return SymfonyRequest
+     */
+    function getRequest() {
+        return $this->request;
     }
 
     /**
@@ -104,17 +124,20 @@ final class Request
 
     public function getProtocol()
     {
-        return Server::getProtocol();
+        return $this->request->getProtocolVersion();
+//        return Server::getProtocol();
     }
 
     public function getHostname()
     {
-        return Server::getHostname();
+        return $this->request->getHttpHost();
+//        return Server::getHostname();
     }
 
     public function getMethod()
     {
-        return Server::getMethod();
+        return $this->request->getMethod();
+//        return Server::getMethod();
     }
 
     /**
@@ -142,37 +165,7 @@ final class Request
      */
     public function input($key = null, $default = null)
     {
-        $post = $this->rawPostContent();
-        $get = $this->rawGetContent();
-        $routeParams = [];
-
-        //Check route parameters
-        $route = $this->getRoute();
-        if ($route) {
-            $routeParams = $route->getParameters();
-        }
-
-        $inputs = array_merge($get, $post, $routeParams);
-        if ($key) {
-            return isset($inputs[$key]) ? $inputs[$key] : $default;
-        } else {
-            return $inputs;
-        }
-    }
-
-    private function rawGetContent()
-    {
-        return $_GET;
-    }
-
-    private function rawPostContent()
-    {
-        return $_POST;
-    }
-
-    private function rawRequestContent()
-    {
-        return $_REQUEST;
+        return $this->request->get($key, $default);
     }
 
     /**
@@ -182,12 +175,13 @@ final class Request
      */
     public function hasFile($name)
     {
-        //See if it makes sense to use dot notation
-        if (isset($_FILES[$name])) {
-            $file = $_FILES[$name];
-            return isset($file['tmp_name']) && file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
-        }
-        return false;
+        return $this->request->files->has($name);
+//        //See if it makes sense to use dot notation
+//        if (isset($_FILES[$name])) {
+//            $file = $_FILES[$name];
+//            return isset($file['tmp_name']) && file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
+//        }
+//        return false;
     }
 
     /**

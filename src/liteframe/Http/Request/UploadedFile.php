@@ -4,9 +4,12 @@ namespace LiteFrame\Http\Request;
 
 use Exception;
 use LiteFrame\Storage\File;
+use function nPath;
+use function request;
+use function storagePath;
 
-class UploadedFile
-{
+class UploadedFile {
+
     protected $name;
     protected $uploadInfo;
 
@@ -16,7 +19,7 @@ class UploadedFile
         $this->validate();
         $this->uploadInfo = $_FILES[$this->name];
     }
-    
+
     /**
      * Save uploaded file publicly to the path
      * @param type $path
