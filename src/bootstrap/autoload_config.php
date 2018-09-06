@@ -24,11 +24,6 @@ return [
      * |
      */
     "mapping" => [
-        /**
-         * Symfony Components
-         */
-        'Symfony\Component\VarDumper' => "symfony/var-dumper",
-        'Symfony\Polyfill\Mbstring' => "symfony/polyfill-mbstring"
     ],
     /*
      * ----------------------------
