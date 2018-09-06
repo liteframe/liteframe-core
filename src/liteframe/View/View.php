@@ -58,9 +58,9 @@ class View
 
             //We are left with no choose but to use our default error pages
             if (!file_exists($file)) {
-                $file = basePath("core/html/errors/$code.php");
+                $file = _corePath("html/errors/$code.php");
                 if (!file_exists($file)) {
-                    $file = basePath('core/html/errors/default.php');
+                    $file = _corePath('html/errors/default.php');
                 }
             }
         }

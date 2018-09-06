@@ -5,7 +5,7 @@ Core files for LiteFrame project.
 PHP 5.5 and above
 
 ## Installation
-`composer require liteframe/liteframe`
+`composer require liteframe/liteframe-core`
 
 
 ## How to Contribute

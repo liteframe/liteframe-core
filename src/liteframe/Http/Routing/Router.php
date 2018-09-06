@@ -473,7 +473,7 @@ class Router
             return view($view, $data);
         };
 
-        return static::all($route, $target, $name, $middleware);
+        return static::get($route, $target, $name, $middleware);
     }
 
     /**

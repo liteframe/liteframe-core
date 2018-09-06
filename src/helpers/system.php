@@ -352,6 +352,16 @@ function basePath($path = '')
 }
 
 /**
+ * Get the path to the base of the application.
+ *
+ * @param string $path
+ * @return string
+ */
+function _corePath($path = '') {
+    return nPath(CORE_DIR, $path);
+}
+
+/**
  * Get the default path to application files.
  *
  * @param string $path
@@ -432,29 +442,23 @@ function fixClassname($namespace, $class = null)
 
 function appAutoloader($fullClassName)
 {
-    global $autoload_config;
-
-    //Load vendor-to-file mapping
-    $file_mapping = isset($autoload_config['vendor_file']) ? $autoload_config['vendor_file'] : [];
+    $autoload_config = require _corePath('bootstrap/autoload_config.php');
+    //Load vendor boot files
+    $file_mapping = isset($autoload_config['boot']) ? $autoload_config['boot'] : [];
     $vendor = isset(explode('\\', $fullClassName)[0]) ? explode('\\', $fullClassName)[0] : '';
     if ($vendor) {
         foreach ($file_mapping as $namespace => $file) {
             if ($vendor === $namespace) {
-                require_once basePath($file);
+                require_once _corePath($file);
                 break;
             }
         }
     }
     
     //Autoload paths (in order of importance)
-    $defaultAutoloadPaths = $autoload_config['folders'];
-    $userAutoloadPaths = config('autoload.folders');
-    $autoloadPaths = array_merge($defaultAutoloadPaths, $userAutoloadPaths);
-
+    $autoloadPaths = $autoload_config['folders'];
     //Check psr-4 configuration
-    $defaultMappings = $autoload_config['mapping'];
-    $userMappings = config('autoload.mapping', []);
-    $mappings = array_merge($userMappings, $defaultMappings);
+    $mappings = $autoload_config['mapping'];
     $mapPath = null;
     foreach ($mappings as $namespace => $folder) {
         $pos = strpos($fullClassName, $namespace);
@@ -468,9 +472,9 @@ function appAutoloader($fullClassName)
 
     foreach ($autoloadPaths as $path) {
         if ($mapPath) {
-            $location = basePath("$path/$mapPath.php");
+            $location = _corePath("$path/$mapPath.php");
         } else {
-            $location = basePath("$path/$fullClassName.php");
+            $location = _corePath("$path/$fullClassName.php");
         }
         if (is_file($location)) {
             require_once $location;
