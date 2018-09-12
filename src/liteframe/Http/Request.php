@@ -124,8 +124,8 @@ final class Request {
 
     public function getProtocol()
     {
-        return $this->request->getProtocolVersion();
-//        return Server::getProtocol();
+        // return $this->request->getProtocolVersion();
+       return Server::getProtocol();
     }
 
     public function getHostname()
