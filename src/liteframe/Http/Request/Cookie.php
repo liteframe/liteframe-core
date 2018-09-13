@@ -5,7 +5,8 @@ namespace LiteFrame\Http\Request;
 use LiteFrame\Http\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class Cookie {
+class Cookie
+{
     protected static $instance;
 
     /**
@@ -13,7 +14,8 @@ class Cookie {
      *
      * @return ParameterBag
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (empty(static::$instance)) {
             static::$instance = Request::getInstance()->cookies;
         }
@@ -21,29 +23,33 @@ class Cookie {
         return static::$instance;
     }
 
-    public static function set($name, $value) {
+    public static function set($name, $value)
+    {
         $self = static::getInstance();
         return $self->set($name, $value);
     }
 
-    public static function get($name, $default) {
+    public static function get($name, $default)
+    {
         $self = static::getInstance();
         return $self->get($name, $default);
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $self = static::getInstance();
         return $self->set($name, $value);
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         $self = static::getInstance();
         return $self->get($name);
     }
 
-    public function __call($name, $arguments) {
+    public function __call($name, $arguments)
+    {
         $self = static::getInstance();
         return call_user_func([$self, $name], $arguments);
     }
-
 }

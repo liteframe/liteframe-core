@@ -10,23 +10,24 @@ use LiteFrame\Http\Request;
 use LiteFrame\Http\Request\Session;
 use function abort_unless;
 
-class ValidateCSRFToken extends Middleware {
+class ValidateCSRFToken extends Middleware
+{
 
     /**
      * Token key
-     * @var string 
+     * @var string
      */
     public static $tokenKey = '__token';
 
     /**
      * Token expire key
-     * @var string 
+     * @var string
      */
     public static $tokenExpireKey = '__token_expire';
 
     /**
      * Route names to ignore
-     * @var array 
+     * @var array
      */
     protected $except = [
     ];
@@ -39,7 +40,8 @@ class ValidateCSRFToken extends Middleware {
      *
      * @return mixed
      */
-    public function run(Closure $next = null, Request $request = null) {
+    public function run(Closure $next = null, Request $request = null)
+    {
         if (!$next) {
             return;
         }
@@ -49,7 +51,8 @@ class ValidateCSRFToken extends Middleware {
         return $next($request);
     }
 
-    public function validate(Request $request) {
+    public function validate(Request $request)
+    {
         if ($request->getMethod() == 'GET') {
             return true;
         }
@@ -65,8 +68,8 @@ class ValidateCSRFToken extends Middleware {
         return $ignore || (!$this->isTokenExpired() && !$this->match($request->{static::$tokenKey}));
     }
 
-    public function generate() {
-       
+    public function generate()
+    {
         if ($this->isTokenExpired()) {
             //Generate new token
             $token = md5(uniqid());
@@ -79,18 +82,20 @@ class ValidateCSRFToken extends Middleware {
         Session::put(static::$tokenExpireKey, $now);
     }
 
-    public function isTokenExpired() {
+    public function isTokenExpired()
+    {
         $tokenTime = Session::fetch(static::$tokenExpireKey);
         $now = new DateTime;
         return !is_object($tokenTime) || $now > $tokenTime;
     }
 
-    public static function getSessionToken() {
+    public static function getSessionToken()
+    {
         return Session::fetch(static::$tokenKey);
     }
 
-    public function match($token) {
+    public function match($token)
+    {
         return strcasecmp($token, static::getSessionToken());
     }
-
 }

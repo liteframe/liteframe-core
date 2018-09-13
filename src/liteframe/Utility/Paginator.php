@@ -9,7 +9,8 @@ class Paginator extends Collection
     protected $total;
     protected $link_params = [];
 
-    public function __construct($items, $page, $limit, $total) {
+    public function __construct($items, $page, $limit, $total)
+    {
         parent::__construct($items);
         $this->page = $page;
         $this->limit = $limit;
@@ -22,7 +23,8 @@ class Paginator extends Collection
         return $this;
     }
 
-    private function getLinkPrams($extra = []) {
+    private function getLinkPrams($extra = [])
+    {
         return array_merge($this->link_params, $extra);
     }
 

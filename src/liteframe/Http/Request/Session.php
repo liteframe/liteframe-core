@@ -9,17 +9,19 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use function config;
 
-class Session extends SymfonySession {
+class Session extends SymfonySession
+{
 
     /**
      *
-     * @var SymfonySession 
+     * @var SymfonySession
      */
     private static $instance;
     /**
      * {@inheritdoc}
      */
-    public function __construct(SessionStorageInterface $storage = null, AttributeBagInterface $attributes = null, FlashBagInterface $flashes = null) {
+    public function __construct(SessionStorageInterface $storage = null, AttributeBagInterface $attributes = null, FlashBagInterface $flashes = null)
+    {
         parent::__construct($storage, $attributes, $flashes);
         //load session configurations here
         $this->configure();
@@ -31,7 +33,8 @@ class Session extends SymfonySession {
      *
      * @return SymfonySession
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (empty(static::$instance)) {
             static::$instance = new static;
         }
@@ -39,29 +42,33 @@ class Session extends SymfonySession {
         return static::$instance;
     }
 
-    public static function hasValue($key) {
-        
+    public static function hasValue($key)
+    {
         $self = static::getInstance();
         return $self->has($key);
     }
 
-    public static function put($name, $value) {
+    public static function put($name, $value)
+    {
         $self = static::getInstance();
         return $self->set($name, $value);
     }
 
-    public static function fetch($name, $default = null) {
+    public static function fetch($name, $default = null)
+    {
         $self = static::getInstance();
         return $self->get($name, $default);
     }
 
-    public static function destroy() {
+    public static function destroy()
+    {
         $self = static::getInstance();
         $self->clear();
         $self->invalidate();
     }
 
-    private function configure() {
+    private function configure()
+    {
         //Set name
         $name = Inflector::underscore(config('app.name'));
         $this->setName(config('session.name', "{$name}_Session"));
@@ -79,5 +86,4 @@ class Session extends SymfonySession {
 //        //session lifetime
 //        ini_set('session.cookie_lifetime', config('session.lifetime', 0));
     }
-
 }

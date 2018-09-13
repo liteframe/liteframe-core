@@ -31,7 +31,7 @@ return [
      * ----------------------------
      * | This allows you to configure setup files for namespaces.
      * | This is not a recommeneded way to autoload files but was added with RedBeanPHP in mind
-     * | and only available as a core functionality. 
+     * | and only available as a core functionality.
      * | This allows us to load and run RedBeanPHP classes only when necessary
      */
     "boot" => [

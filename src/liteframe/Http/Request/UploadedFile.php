@@ -8,8 +8,8 @@ use function nPath;
 use function request;
 use function storagePath;
 
-class UploadedFile {
-
+class UploadedFile
+{
     protected $name;
     protected $uploadInfo;
 
@@ -32,7 +32,7 @@ class UploadedFile {
     }
 
     /**
-     * 
+     *
      * @param type $path
      * @param type $name
      * @return File
@@ -69,7 +69,8 @@ class UploadedFile {
         //Check mime type, file size, etc.
     }
 
-    public function ext() {
+    public function ext()
+    {
         $dots = explode('.', $this->uploadInfo['name']);
         return array_pop($dots);
     }

@@ -532,12 +532,12 @@ function e($string)
 }
 
 function csrf_field()
- {
+{
     $key = \Middlewares\ValidateCSRFToken::$tokenKey;
     return "<input name='{$key}' value='" . csrf_token() . "' hidden>";
 }
 
 function csrf_token()
- {
+{
     return \Middlewares\ValidateCSRFToken::getSessionToken();
 }

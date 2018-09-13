@@ -313,7 +313,8 @@ class Response
         return $this->statusCode;
     }
 
-    public function setStatusCode($code) {
+    public function setStatusCode($code)
+    {
         $this->statusCode = $code;
         return $this;
     }

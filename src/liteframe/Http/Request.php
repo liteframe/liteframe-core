@@ -15,8 +15,8 @@ use function config;
  *
  * @author Victor Anuebunwa
  */
-class Request extends SymfonyRequest {
-
+class Request extends SymfonyRequest
+{
     protected static $instance;
     protected $routeUrl;
     protected $route;
@@ -101,7 +101,7 @@ class Request extends SymfonyRequest {
 
     public function getProtocol()
     {
-       return Server::getProtocol();
+        return Server::getProtocol();
     }
 
     public function getHostname()
@@ -138,7 +138,16 @@ class Request extends SymfonyRequest {
      */
     public function input($key = null, $default = null)
     {
-        return $this->get($key, $default);
+        if ($key) {
+            return $this->get($key, $default);
+        } else {
+            return $this->all();
+        }
+    }
+
+    public function all()
+    {
+        return array_merge($this->query->all(), $this->request->all(), $this->attributes->all());
     }
 
     /**

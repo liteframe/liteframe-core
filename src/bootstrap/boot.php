@@ -41,7 +41,7 @@ requireAll($helpers_files);
 spl_autoload_register('appAutoloader');
 
 
-if(appIsLocal()){
+if (appIsLocal()) {
     $cutomStyles = array(
         'default' => 'background-color:#fff; '
         . 'border:lightgray solid thin; '

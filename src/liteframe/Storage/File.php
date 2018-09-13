@@ -6,8 +6,8 @@ use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use function basePath;
 use function config;
 
-class File extends SymfonyFile {
-
+class File extends SymfonyFile
+{
     protected $absolutePath;
     protected $relativePath;
 
@@ -15,8 +15,8 @@ class File extends SymfonyFile {
      * Create file object
      * @param type $path relative path to project directory
      */
-    public function __construct($path, $checkPath = true) {
-
+    public function __construct($path, $checkPath = true)
+    {
         parent::__construct($path, $checkPath);
         $this->absolutePath = $this->getPathname();
         $this->relativePath = $this->resolveRelativePath($this->absolutePath);
@@ -179,5 +179,4 @@ class File extends SymfonyFile {
     {
         return fileperms($this->getAbsolutePath());
     }
-
 }

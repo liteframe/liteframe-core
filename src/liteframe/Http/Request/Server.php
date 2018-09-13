@@ -13,7 +13,8 @@ class Server
     {
     }
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (empty(static::$instance)) {
             static::$instance = Request::getInstance()->server;
         }
@@ -26,7 +27,8 @@ class Server
         return static::getInstance()->get($key, $default);
     }
 
-    public static function set($key, $value) {
+    public static function set($key, $value)
+    {
         return static::getInstance()->set($key, $value);
     }
 
@@ -35,7 +37,8 @@ class Server
         return static::isHttps();
     }
     
-    public static function getProtocol() {
+    public static function getProtocol()
+    {
         return  static::get('REQUEST_SCHEME', 'http');
     }
 
