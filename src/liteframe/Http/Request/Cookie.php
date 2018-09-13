@@ -3,20 +3,19 @@
 namespace LiteFrame\Http\Request;
 
 use LiteFrame\Http\Request;
-use Symfony\Component\HttpFoundation\HeaderBag;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
-class Header
-{
+class Cookie {
     protected static $instance;
 
     /**
      * Return singleton class instance.
      *
-     * @return HeaderBag
+     * @return ParameterBag
      */
     public static function getInstance() {
         if (empty(static::$instance)) {
-            static::$instance = Request::getInstance()->headers;
+            static::$instance = Request::getInstance()->cookies;
         }
 
         return static::$instance;
@@ -27,7 +26,7 @@ class Header
         return $self->set($name, $value);
     }
 
-    public static function get($name, $default = null) {
+    public static function get($name, $default) {
         $self = static::getInstance();
         return $self->get($name, $default);
     }

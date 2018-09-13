@@ -3,11 +3,10 @@
 namespace LiteFrame\Http;
 
 use LiteFrame\Http\Request\Header;
+use LiteFrame\Http\Request\Server;
+use LiteFrame\Http\Request\Session;
 use LiteFrame\Http\Request\UploadedFile;
 use LiteFrame\Http\Routing\Route;
-use LiteFrame\Storage\Server;
-use LiteFrame\Storage\Session;
-use LogicException;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use function config;
 
@@ -16,7 +15,7 @@ use function config;
  *
  * @author Victor Anuebunwa
  */
-final class Request {
+class Request extends SymfonyRequest {
 
     protected static $instance;
     protected $routeUrl;
@@ -24,21 +23,7 @@ final class Request {
     protected $appURL;
     protected $baseDir;
     protected $ajax;
-    protected $content;
-    protected $request;
     protected $routeParams = [];
-
-    private function __construct()
-    {
-        //Check route parameters
-        $route = $this->getRoute();
-        if ($route) {
-            $this->routeParams = $route->getParameters();
-        }
-
-        $this->request = SymfonyRequest::createFromGlobals();
-        $this->request->attributes->add($this->routeParams);
-    }
 
     /**
      * Return singleton class instance.
@@ -48,18 +33,10 @@ final class Request {
     public static function getInstance()
     {
         if (empty(static::$instance)) {
-            static::$instance = new static();
+            static::$instance = static::createFromGlobals();
         }
 
         return static::$instance;
-    }
-
-    /**
-     * 
-     * @return SymfonyRequest
-     */
-    function getRequest() {
-        return $this->request;
     }
 
     /**
@@ -124,20 +101,12 @@ final class Request {
 
     public function getProtocol()
     {
-        // return $this->request->getProtocolVersion();
        return Server::getProtocol();
     }
 
     public function getHostname()
     {
-        return $this->request->getHttpHost();
-//        return Server::getHostname();
-    }
-
-    public function getMethod()
-    {
-        return $this->request->getMethod();
-//        return Server::getMethod();
+        return $this->getHttpHost();
     }
 
     /**
@@ -153,7 +122,11 @@ final class Request {
     public function setRoute(Route $route)
     {
         $this->route = $route;
-
+        //Check and add route parameters
+        if ($route) {
+            $this->routeParams = $route->getParameters();
+            $this->attributes->add($this->routeParams);
+        }
         return $this;
     }
 
@@ -165,7 +138,7 @@ final class Request {
      */
     public function input($key = null, $default = null)
     {
-        return $this->request->get($key, $default);
+        return $this->get($key, $default);
     }
 
     /**
@@ -175,13 +148,7 @@ final class Request {
      */
     public function hasFile($name)
     {
-        return $this->request->files->has($name);
-//        //See if it makes sense to use dot notation
-//        if (isset($_FILES[$name])) {
-//            $file = $_FILES[$name];
-//            return isset($file['tmp_name']) && file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
-//        }
-//        return false;
+        return $this->files->has($name);
     }
 
     /**
@@ -266,58 +233,6 @@ final class Request {
 
         return !empty($acceptable) && (stripos($acceptable, '/json') !== false ||
                 stripos($acceptable, '+json') !== false);
-    }
-
-    /**
-     * Returns the request body content.
-     *
-     * @param bool $asResource If true, a resource will be returned
-     *
-     * @return string|resource The request body content or a resource to read the body stream
-     *
-     * @throws LogicException
-     *
-     * @author Laravel
-     */
-    public function getContent($asResource = false)
-    {
-        $currentContentIsResource = is_resource($this->content);
-        if (PHP_VERSION_ID < 50600 && false === $this->content) {
-            throw new LogicException('getContent() can only be called once when using the resource return type and PHP below 5.6.');
-        }
-
-        if (true === $asResource) {
-            if ($currentContentIsResource) {
-                rewind($this->content);
-
-                return $this->content;
-            }
-
-            // Content passed in parameter (test)
-            if (is_string($this->content)) {
-                $resource = fopen('php://temp', 'r+');
-                fwrite($resource, $this->content);
-                rewind($resource);
-
-                return $resource;
-            }
-
-            $this->content = false;
-
-            return fopen('php://input', 'rb');
-        }
-
-        if ($currentContentIsResource) {
-            rewind($this->content);
-
-            return stream_get_contents($this->content);
-        }
-
-        if (null === $this->content || false === $this->content) {
-            $this->content = file_get_contents('php://input');
-        }
-
-        return $this->content;
     }
 
     public function __get($name)

@@ -1,55 +1,45 @@
 <?php
 
-namespace LiteFrame\Storage;
+namespace LiteFrame\Http\Request;
 
 use LiteFrame\CLI\Args;
+use LiteFrame\Http\Request;
 
 class Server
 {
     protected static $instance;
-    protected $values;
 
     protected function __construct()
     {
-        $this->values = $_SERVER;
     }
 
-    /**
-     * Return singleton class instance.
-     *
-     * @return Server
-     */
-    private static function getInstance()
-    {
+    public static function getInstance() {
         if (empty(static::$instance)) {
-            static::$instance = new static();
+            static::$instance = Request::getInstance()->server;
         }
 
         return static::$instance;
     }
 
-    
     public static function get($key, $default = null)
     {
-        return static::getInstance()->getServerValue($key, $default);
+        return static::getInstance()->get($key, $default);
     }
-    
+
+    public static function set($key, $value) {
+        return static::getInstance()->set($key, $value);
+    }
+
     public static function isSecure()
     {
         return static::isHttps();
     }
     
-    private function getServerValue($key, $default = null)
-    {
-        return isset($this->values[$key]) ? $this->values[$key] : $default;
-    }
-    
-    public static function getProtocol()
-    {
+    public static function getProtocol() {
         return  static::get('REQUEST_SCHEME', 'http');
     }
 
-    public static function getHostname()
+    public static function getHttpHost()
     {
         return static::get('HTTP_HOST');
     }

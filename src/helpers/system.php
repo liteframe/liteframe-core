@@ -2,14 +2,10 @@
 
 use LiteFrame\Exception\Exceptions\HttpException;
 use LiteFrame\Http\Request;
+use LiteFrame\Http\Request\Session;
 use LiteFrame\Http\Response;
 use LiteFrame\Http\Routing\Router;
-use LiteFrame\Storage\Session;
 use LiteFrame\View\View;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Get environment setting.
@@ -536,28 +532,12 @@ function e($string)
 }
 
 function csrf_field()
-{
-    echo "<input name='__token' value='" . csrf_token() . "' hidden>";
+ {
+    $key = \Middlewares\ValidateCSRFToken::$tokenKey;
+    return "<input name='{$key}' value='" . csrf_token() . "' hidden>";
 }
 
 function csrf_token()
-{
-    return '';
-
-    // //generate and store in session for 1hr if not exist
-    // $time = Session::get('_token_expire');
-    // $tokenTime = new DateTime($time);
-    // $now = new DateTime;
-    //
-    // if ($now->diff($tokenTime)->format('%R') == '+') {
-    //     $token = md5(uniqid());
-    //     Session::set('_token', $token);
-    //     $hours = 1;
-    //     $now->add(new \DateInterval("PT{$hours}H"));
-    //     //Expire in 1hr
-    //     Session::set('_token_expire', $now);
-    // } else {
-    //     $token = Session::get('_token');
-    // }
-    // return $token;
+ {
+    return \Middlewares\ValidateCSRFToken::getSessionToken();
 }
