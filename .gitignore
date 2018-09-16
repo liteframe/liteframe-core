@@ -2,3 +2,4 @@ vendor/
 .DS_Store
 nbproject/
 /.php_cs.cache
+composer.lock
