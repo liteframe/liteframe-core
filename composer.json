@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
+        "php": ">=7.1",
         "peppeocchi/php-cron-scheduler": "^2.3",
         "avonnadozie/liteonion": "^2.0",
         "symfony/var-dumper": "^4.1",
