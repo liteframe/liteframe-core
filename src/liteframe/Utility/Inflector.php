@@ -15,12 +15,11 @@ class Inflector extends DoctrineInflector
 
     public static function underscore($text)
     {
-        return static::tableize($text);
+        return preg_replace('#[\-\s]#', '_', preg_replace('~(?<=\\w)([A-Z])~', '_$1', $text));
     }
 
-    public static function pluraltable($name)
-    {
-        $table = static::tableize($name);
+    public static function redbeantable($name) {
+        $table = static::slugify($name);
         return static::pluralize($table);
     }
 }

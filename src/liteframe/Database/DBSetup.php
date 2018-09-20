@@ -34,10 +34,10 @@ if (empty($GLOBALS['__rbloaded'])) {
         R::freeze($freezeState);
     }
     
-    R::ext('xdispense', function ($type) {
-        return R::getRedBean()->dispense($type);
-    });
-    
+//    R::ext('xdispense', function ($type) {
+//        return R::getRedBean()->dispense($type);
+//    });
+
     /**
      * True is RedBeanPHP has been loaded, else false
      * @global string $GLOBALS['__rbloaded']
