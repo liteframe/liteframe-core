@@ -10,7 +10,7 @@ class Inflector extends DoctrineInflector
 {
     public static function slugify($text)
     {
-        return str_replace('_', '-', static::tableize($text));
+        return preg_replace('#[\\/_\s]#', '-', static::tableize($text));
     }
 
     public static function underscore($text)

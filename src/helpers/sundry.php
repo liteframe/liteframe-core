@@ -116,13 +116,15 @@ function getRedirectUrl($url)
     return false;
 }
 
-function copyright($startYear = null)
+function copyright($startYear = null, $name = null)
 {
     $date = date('Y');
-    $appName = config('app.name');
+    if (!$name) {
+        $name = config('app.name');
+    }
     if ($startYear && $date > $startYear) {
         $date = "$startYear - $date";
     }
 
-    return "&copy; $date $appName. All rights reserved.";
+    return "&copy; $date $name. All rights reserved.";
 }
