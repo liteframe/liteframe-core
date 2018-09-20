@@ -1,8 +1,8 @@
 <?php
 
 use LiteFrame\Exception\Exceptions\HttpException;
+use LiteFrame\Http\Middlewares\ValidateCSRFToken;
 use LiteFrame\Http\Request;
-use LiteFrame\Http\Request\Session;
 use LiteFrame\Http\Response;
 use LiteFrame\Http\Routing\Router;
 use LiteFrame\View\View;
@@ -533,11 +533,19 @@ function e($string)
 
 function csrf_field()
 {
-    $key = \Middlewares\ValidateCSRFToken::$tokenKey;
+    $key = ValidateCSRFToken::$tokenKey;
     return "<input name='{$key}' value='" . csrf_token() . "' hidden>";
 }
 
 function csrf_token()
 {
-    return \Middlewares\ValidateCSRFToken::getSessionToken();
+    return ValidateCSRFToken::getSessionToken();
+}
+
+function getHttpResponseMessage($code) {
+    return Response::getInstance()->getHttpResponseMessage($code);
+}
+
+function redirect($new_location, $code = 302) {
+    return response()->redirect($new_location, $code);
 }
