@@ -81,9 +81,7 @@ class Model extends SimpleModel
             $split = explode('\\', $classname);
             $name = array_pop($split);
             //Generate table name
-            $model->table = Inflector::tableize($name);
-//            $model->table = Inflector::pluralize(strtolower($name));
-//            $model->table = Inflector::underscore($name);
+            $model->table = Inflector::pluraltable($name);
         }
         return $model->table;
     }
