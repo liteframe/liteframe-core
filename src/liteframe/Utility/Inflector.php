@@ -19,7 +19,7 @@ class Inflector extends DoctrineInflector
     }
 
     public static function redbeantable($name) {
-        $table = static::slugify($name);
+        $table = strtolower(preg_replace('#[\\/_\-\s]#', '', $name));
         return static::pluralize($table);
     }
 }

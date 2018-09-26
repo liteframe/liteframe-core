@@ -35,5 +35,8 @@
         "psr-4": {
             "LiteFrame\\": "src/liteframe"
         }
+    },
+    "scripts": {
+        "test": "\"vendor/bin/phpunit\""
     }
 }

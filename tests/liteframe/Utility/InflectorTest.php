@@ -25,7 +25,7 @@ class InflectorTest extends TestCase {
     }
 
     public function testRedBeantable() {
-        $expected = 'fa-vorite-2018-2019-food-ables';
+        $expected = 'favorite20182019foodables';
         $slug = Inflector::redbeantable($this->testSentence);
         $this->assertEquals($expected, $slug);
     }
