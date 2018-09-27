@@ -149,9 +149,10 @@ class Model extends SimpleModel
     {
         $traits = class_uses($this);
         foreach ($traits as $trait) {
-            $method = "boot$trait";
+            $name = basename($trait);
+            $method = "boot{$name}";
             if (method_exists($this, $method)) {
-                $method();
+                $this->$method();
             }
         }
     }
@@ -515,14 +516,14 @@ class Model extends SimpleModel
         $this->updateTimestamps();
 
         //Fire "before" events
-        if (!$this->fireBeforeSaveEvent($this->bean)) {
+        if (!$this->fireBeforeSaveEvent($this)) {
             return false;
         }
 
         $updating = $this->exists();
-        if ($updating && !$this->fireBeforeUpdateEvent($this->bean)) {
+        if ($updating && !$this->fireBeforeUpdateEvent($this)) {
             return false;
-        } elseif (!$this->fireBeforeCreateEvent($this->bean)) {
+        } elseif (!$this->fireBeforeCreateEvent($this)) {
             return false;
         }
 
@@ -581,7 +582,7 @@ class Model extends SimpleModel
      */
     public function trash()
     {
-        if ($this->fireBeforeTrashEvent($this->bean)) {
+        if ($this->fireBeforeTrashEvent($this)) {
             $result = DB::trash($this->bean);
             $this->fireAfterTrashEvent($result);
             return true;
