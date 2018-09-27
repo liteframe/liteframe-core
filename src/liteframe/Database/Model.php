@@ -69,6 +69,7 @@ class Model extends SimpleModel
     protected function __construct(OODBBean $bean = null)
     {
         $this->bean = $bean;
+        $this->setup();
     }
     
     public function getBean()
@@ -127,7 +128,6 @@ class Model extends SimpleModel
     {
         $bean = DB::dispense(static::getTable(), $num, $alwaysReturnArray);
         $model = static::wrap($bean);
-        $model->setup();
         return $model;
     }
 
