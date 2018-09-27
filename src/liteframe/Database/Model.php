@@ -963,9 +963,9 @@ class Model extends SimpleModel
 
     public function __get($property)
     {
-        if (property_exists($this->bean, $property)) {
+        try {
             $data = $this->bean->$property;
-        } else {
+        } catch (\Exception $e) {
             $data = null;
         }
 
