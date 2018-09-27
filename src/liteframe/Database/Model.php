@@ -2,6 +2,7 @@
 
 namespace LiteFrame\Database;
 
+use Exception;
 use LiteFrame\Utility\Collection;
 use LiteFrame\Utility\Inflector;
 use LiteFrame\Utility\Paginator;
@@ -126,25 +127,25 @@ class Model extends SimpleModel
     {
         $bean = DB::dispense(static::getTable(), $num, $alwaysReturnArray);
         $model = static::wrap($bean);
-        $model->boot();
+        $model->setup();
         return $model;
     }
 
     
-    protected function boot()
+    private function setup()
     {
-        $this->bootModel();
+        $this->boot();
         $this->bootTraits();
     }
 
     /**
      * User Initializations, override this
      */
-    protected function bootModel()
+    protected function boot()
     {
     }
 
-    protected function bootTraits()
+    private function bootTraits()
     {
         $traits = class_uses($this);
         foreach ($traits as $trait) {
@@ -965,7 +966,7 @@ class Model extends SimpleModel
     {
         try {
             $data = $this->bean->$property;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $data = null;
         }
 
@@ -987,7 +988,11 @@ class Model extends SimpleModel
         if (method_exists($this, $method)) {
             $this->$method($value);
         } else {
-            $this->bean->$property = $value;
+            if ($this->bean) {
+                $this->bean->$property = $value;
+            } else {
+                throw new Exception("No bean exists for this model, intialize model using the dispense() instead");
+            }
         }
     }
 
