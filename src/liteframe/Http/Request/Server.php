@@ -61,6 +61,6 @@ class Server
     {
         $value = static::get('HTTPS', 'off');
         //Translate
-        return Args::$booleanMap[$value];
+        return Args::booleanValue($value);
     }
 }
