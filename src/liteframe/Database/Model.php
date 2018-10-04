@@ -149,7 +149,8 @@ class Model extends SimpleModel
     {
         $traits = class_uses($this);
         foreach ($traits as $trait) {
-            $name = basename($trait);
+            $reflect = new \ReflectionClass($trait);
+            $name = $reflect->getShortName();
             $method = "boot{$name}";
             if (method_exists($this, $method)) {
                 $this->$method();
