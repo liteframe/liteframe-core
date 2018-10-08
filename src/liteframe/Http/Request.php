@@ -88,11 +88,11 @@ class Request extends SymfonyRequest
     {
         if (empty($this->appURL)) {
             $hostname = $this->getHostname();
-            $protocol = $this->getProtocol();
-            if (empty($hostname) || empty($protocol)) {
+            if (empty($hostname)) {
                 $this->appURL = config('app.url');
             } else {
-                $this->appURL = $protocol . '://' . $hostname . '/' . $this->getBaseDir();
+                $protocol = $this->getProtocol();
+                $this->appURL = ($protocol ?: 'http') . '://' . $hostname . '/' . $this->getBaseDir();
             }
         }
 
