@@ -973,7 +973,7 @@ class Model extends SimpleModel
         }
 
         //Check for getProperty methods
-        $prop = Inflector::camelize($property);
+        $prop = ucfirst($property);
         $method = "get{$prop}Property";
         if (method_exists($this, $method)) {
             return $this->$method($data);
@@ -985,7 +985,7 @@ class Model extends SimpleModel
     public function __set($property, $value)
     {
         //Check for setProperty methods
-        $prop = Inflector::camelize($property);
+        $prop = ucfirst($property);
         $method = "set{$prop}Property";
         if (method_exists($this, $method)) {
             $this->$method($value);
