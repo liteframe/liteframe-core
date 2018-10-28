@@ -16,10 +16,11 @@ if (empty($GLOBALS['__rbloaded'])) {
             break;
         default:
             $dbhost = config("database.$driver.host", 'localhost');
+            $dbport = config("database.$driver.port", 3306);
             $dbname = config("database.$driver.dbname", 'liteframe');
             $dbuser = config("database.$driver.dbuser", 'root');
             $dbpassword = config("database.$driver.dbpassword", '');
-            R::setup("$driver:host={$dbhost};dbname={$dbname}", $dbuser, $dbpassword);
+            R::setup("$driver:host={$dbhost}:$dbport;dbname={$dbname}", $dbuser, $dbpassword);
             break;
     }
 
