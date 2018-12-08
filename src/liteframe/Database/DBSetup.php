@@ -38,9 +38,10 @@ if (empty($GLOBALS['__rbloaded'])) {
         R::freeze($freezeState);
     }
     
-//    R::ext('xdispense', function ($type) {
-//        return R::getRedBean()->dispense($type);
-//    });
+    //Configure prefix extension
+    R::ext('xdispense', function ($type) {
+        return R::getRedBean()->dispense($type);
+    });
 
     /**
      * True is RedBeanPHP has been loaded, else false
