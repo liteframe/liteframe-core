@@ -17,7 +17,7 @@ use LiteFrame\View\View;
  */
 define('ENV_PATH', 'components/env.php');
 
-function appEnv($key, $default = null)
+function appEnv($key = null, $default = null)
 {
     if (!isset($GLOBALS['env'])) {
         $path = basePath(ENV_PATH);
@@ -28,7 +28,11 @@ function appEnv($key, $default = null)
         }
     }
 
-    return isset($GLOBALS['env'][$key]) ? $GLOBALS['env'][$key] : $default;
+    if ($key) {
+        return isset($GLOBALS['env'][$key]) ? $GLOBALS['env'][$key] : $default;
+    } else {
+        return $GLOBALS['env'];
+    }
 }
 
 /**
@@ -513,7 +517,7 @@ function isCLI()
 
 function appIsLocal()
 {
-    return appEnv('APP_ENV', 'production') === 'local';
+    return appEnv('APP_ENV', 'local') === 'local';
 }
 
 function appIsOnDebugMode()
