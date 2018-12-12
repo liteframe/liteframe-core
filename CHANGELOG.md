@@ -9,17 +9,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Pre-release
 
 - Validators
+- Whoops Support
 - Mailing (other than php mail)
 - Full Documentation
-- support down to php 5.5
-- Use of vendor App\\ in namespace for application controllers, models, middlewares and commands 
 
 ### Future release
 
-- Optional Whoops Support
+- Use of vendor App\\ in namespace for application controllers, models, middlewares and commands 
 - Modularity / Support for packages
 - Dependency injection
 - Multi ORM support
+
+
+## [0.1.4] - 2018-10-05
+
+### Fixed
+
+- Fixed issue with Model events in traits
 
 
 ## [0.1.3] - 2018-10-01
@@ -64,4 +70,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [Unreleased]: https://github.com/liteframe/liteframe-core/compare/v0.1.3...HEAD
 [0.1.1]: https://github.com/liteframe/liteframe-core/compare/v0.1.0...v0.1.1
 [0.1.2]: https://github.com/liteframe/liteframe-core/compare/v0.1.1...v0.1.2
-[0.1.2]: https://github.com/liteframe/liteframe-core/compare/v0.1.2...v0.1.3
+[0.1.3]: https://github.com/liteframe/liteframe-core/compare/v0.1.2...v0.1.3
+[0.1.4]: https://github.com/liteframe/liteframe-core/compare/v0.1.3...v0.1.4
