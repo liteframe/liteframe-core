@@ -15,10 +15,13 @@ use LiteFrame\Http\Response;
 use LiteFrame\Http\Routing\Route;
 use LiteFrame\Http\Routing\Router;
 use LiteOnion\Onion;
+use Throwable;
+use Whoops\Exception\Inspector;
 use Whoops\Handler\JsonResponseHandler;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
+use Whoops\RunInterface;
 use function abort;
 use function abort_unless;
 use function appEnv;
@@ -249,7 +252,7 @@ final class Kernel
             } else {
                 $this->registerDefaultErrorHandlers($isDebug);
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->registerDefaultErrorHandlers($isDebug);
         }
     }
@@ -283,8 +286,12 @@ final class Kernel
         }
 
         $whoops->pushHandler($errorPage);
-        $whoops->pushHandler(function($exception, $inspector, $run) {
-            logger($exception);
+        $whoops->pushHandler(function($exception, Inspector $inspector, RunInterface $run) use ($errorPage) {
+            if ($exception instanceof \LiteFrame\Exception\Exceptions\HttpException) {
+                $run->sendHttpCode($exception->getHttpCode());
+            } else {
+                logger($exception);
+            }
         });
         $whoops->register();
     }

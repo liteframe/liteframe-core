@@ -218,8 +218,8 @@ function response($content = null, $code = 200)
     return $response;
 }
 
-
 if (!function_exists('d')) {
+
     /**
      * Alias for dd()
      */
@@ -227,6 +227,7 @@ if (!function_exists('d')) {
     {
         call_user_func_array('dd', func_get_args());
     }
+
 }
 
 /**
@@ -410,7 +411,7 @@ function appAutoloader($fullClassName)
             }
         }
     }
-    
+
     //Autoload paths (in order of importance)
     $autoloadPaths = $autoload_config['folders'];
     //Check psr-4 configuration
@@ -478,10 +479,7 @@ function cast($destination, $sourceObject)
 function arrayToObject(array $array, $className)
 {
     return unserialize(sprintf(
-                    'O:%d:"%s"%s',
-        strlen($className),
-        $className,
-        strstr(serialize($array), ':')
+                    'O:%d:"%s"%s', strlen($className), $className, strstr(serialize($array), ':')
     ));
 }
 
@@ -494,10 +492,7 @@ function arrayToObject(array $array, $className)
 function objectToObject($instance, $className)
 {
     return unserialize(sprintf(
-                    'O:%d:"%s"%s',
-        strlen($className),
-        $className,
-        strstr(strstr(serialize($instance), '"'), ':')
+                    'O:%d:"%s"%s', strlen($className), $className, strstr(strstr(serialize($instance), '"'), ':')
     ));
 }
 
@@ -546,10 +541,12 @@ function csrf_token()
     return ValidateCSRFToken::getSessionToken();
 }
 
-function getHttpResponseMessage($code) {
+function getHttpResponseMessage($code)
+{
     return Response::getInstance()->getHttpResponseMessage($code);
 }
 
-function redirect($new_location, $code = 302) {
+function redirect($new_location, $code = 302)
+{
     return response()->redirect($new_location, $code);
 }
