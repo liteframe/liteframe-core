@@ -7,16 +7,15 @@ use LiteFrame\Http\Response;
 use LiteFrame\Http\Routing\Router;
 use LiteFrame\View\View;
 
+define('ENV_PATH', 'components/env.php');
 /**
  * Get environment setting.
  *
- * @param type $key
- * @param type $default
+ * @param string $key
+ * @param string $default
  *
  * @return string
  */
-define('ENV_PATH', 'components/env.php');
-
 function appEnv($key = null, $default = null)
 {
     if (!isset($GLOBALS['env'])) {
@@ -38,8 +37,8 @@ function appEnv($key = null, $default = null)
 /**
  * Get application configuration.
  *
- * @param type $key
- * @param type $default
+ * @param string $key
+ * @param string $default
  *
  * @return string
  */
@@ -72,10 +71,12 @@ function config($key, $default = null)
 /**
  * Include a view as string.
  *
- * @param type $path
- * @param type $data
+ * @param string $path
+ * @param array $data
  *
- * @return string
+ * @param bool $return
+ * @return string|null
+ * @throws Exception
  */
 function includeView($path, $data = [], $return = false)
 {
@@ -104,7 +105,8 @@ function view($path, $data = [])
  * Abort with response code.
  *
  * @param type $code
- * @param type $message
+ * @param string $message
+ * @throws HttpException
  */
 function abort($code, $message = '')
 {
@@ -332,25 +334,46 @@ function appPath($path = '')
 
 /**
  * Concatenates two paths
- * @param string $path
- * @param type $context
+ * @param string $context
+ * @param string $filename
  *
  * @return string
  */
-function nPath($path, $context = '')
+function nPath($context, $filename = '')
 {
-    $path = rtrim(fixPath($path), DS);
-    if ($context) {
-        $path .= DS . trim(fixPath($context), DS);
+    $context = rtrim(fixPath($context), DS);
+    if ($filename) {
+        $context .= DS . trim(fixPath($filename), DS);
     }
-    return $path;
+    return $context;
+}
+
+/**
+ * Replace all dots with directory separators
+ * @param $path
+ * @return mixed
+ */
+function dotToPath($path)
+{
+    return str_replace('.', DS, $path);
+}
+
+/**
+ * Replace forward slashes (/) and backslashes (\) with dots (.)
+ * @param $path
+ * @return string|string[]|null
+ */
+function pathToDot($path)
+{
+    return str_replace(['/','\\'], '.', $path);
 }
 
 /**
  * Require all files in a directory.
  *
- * @param type $dir
- * @param type $suffix
+ * @param string $dir
+ * @param bool $recursive
+ * @param string $suffix
  */
 function requireAll($dir, $recursive = true, $suffix = '.php')
 {
@@ -523,7 +546,8 @@ function appIsOnDebugMode()
 /**
  * Escape and display value.
  *
- * @param type $string
+ * @param string $string
+ * @return string
  */
 function e($string)
 {

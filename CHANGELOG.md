@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Future release
 
 - Use of vendor App\\ in namespace for application controllers, models, middlewares and commands 
-- Modularity
+- Modularity (through composer)
 - Dependency injection
 - Multi ORM support
 
