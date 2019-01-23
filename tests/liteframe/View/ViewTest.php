@@ -33,4 +33,18 @@ class ViewTest extends \LiteFrame\Testing\TestCase
         //Content from overideme.blade.php expected instead of overideme.php
         $this->assertEquals('override works!', $content);
     }
+//
+//    public function testLogin(){
+//        View::loginUser('admin','admin');
+//        $content = View::fetch('overideme', [], self::TEST_TEMPLATES);
+//        $this->assertEqualsIgnoringWhitespace('override works! Login too!', $content);
+//    }
+//
+//    public function assertEqualsIgnoringWhitespace($expected, $actual, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false) {
+//        $this->assertEquals(
+//            preg_replace('/\s/', '', $expected),
+//            preg_replace('/\s/', '', $actual),
+//            $message, $delta, $maxDepth, $canonicalize, $ignoreCase
+//        );
+//    }
 }

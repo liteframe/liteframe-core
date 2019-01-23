@@ -1,1 +1,3 @@
-override works!
+override works!@auth
+    Login too!
+@endauth

@@ -8,12 +8,15 @@ use Exception;
 class View
 {
     private $paths = [];
+    private static $auth = ['user' => null, 'role' => null];
+    private $blade;
 
     /**
      * View constructor.
      * @param array|string $paths Path(s) to find view files
      */
-    function __construct($paths = []){
+    function __construct($paths = [])
+    {
         $this->setPaths($paths);
     }
 
@@ -24,9 +27,9 @@ class View
      */
     public function setPaths($paths)
     {
-        $paths = (array) $paths;
+        $paths = (array)$paths;
         //Append framework's view path
-        $paths[] = realpath(__DIR__.'/../../views');
+        $paths[] = realpath(__DIR__ . '/../../views');
 
         $this->paths = $paths;
         return $this;
@@ -50,7 +53,7 @@ class View
      */
     public static function fetch($name, $data = [], $paths = [])
     {
-        if(empty($paths)){
+        if (empty($paths)) {
             $paths = config('view.path');
             if (empty($paths)) {
                 $paths = [appPath('Views')];
@@ -60,8 +63,8 @@ class View
         $view = new static($paths);
 
         //Check if it's blade
-        $bladefile = $view->getFilePath($name , '.blade.php');
-        if ($bladefile) {
+        $bladeFile = $view->getFilePath($name, '.blade.php');
+        if ($bladeFile) {
             return $view->readBladeFile($name, $data);
         } else {
             //else, read file old school way
@@ -70,21 +73,55 @@ class View
         }
     }
 
-    private function readBladeFile($view, $data = [])
+    /**
+     * Read the content of a blade template file
+     * @param $name
+     * @param array $data
+     * @return string
+     * @throws Exception
+     */
+    private function readBladeFile($name, $data = [])
     {
-        $cache = storagePath('system/views');
-        if (appIsOnDebugMode()) {
-            $mode = BladeOne::MODE_DEBUG;
-        } else if (appIsLocal()) {
-            $mode = BladeOne::MODE_SLOW;
-        } else {
-            $mode = BladeOne::MODE_AUTO;
-        }
-        $blade = new BladeOne($this->paths, $cache, $mode);
-
-//        $blade->login('user','role');
-        return $blade->run(pathToDot($view), $data);
+        return $this->getBladeInstance()
+            ->run(pathToDot($name), $data);
     }
+
+    public function getBladeInstance()
+    {
+        if (!$this->blade) {
+            $cache = storagePath('system/views');
+            if (appIsOnDebugMode()) {
+                $mode = BladeOne::MODE_DEBUG;
+            } else if (appIsLocal()) {
+                $mode = BladeOne::MODE_SLOW;
+            } else {
+                $mode = BladeOne::MODE_AUTO;
+            }
+
+            $this->blade = new BladeOne($this->paths, $cache, $mode);
+            if (static::$auth['user']) {
+                $this->blade->login(static::$auth['user'], static::$auth['role']);
+            }
+
+            if(!isCLI()){
+                $this->blade->setBaseUrl(asset());
+            }
+        }
+
+        return $this->blade;
+    }
+
+    /**
+     * Sets a user for the view, this is only available when using blade
+     * @param $user
+     * @param null $role
+     */
+//    public static function loginUser($user, $role = null)
+//    {
+//        static::$auth['user'] = $user;
+//        static::$auth['role'] = $role;
+//    }
+
 
     /**
      * Get full path to view file
@@ -94,7 +131,7 @@ class View
      */
     public function getFilePath($name, $extension = '.php')
     {
-        $filename = trim(dotToPath($name),  '/') . $extension;
+        $filename = trim(dotToPath($name), '/') . $extension;
         $file = null;
         foreach ($this->paths as $dir) {
             $realName = nPath($dir, $filename);

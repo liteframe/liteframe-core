@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 use LiteFrame\Exception\Exceptions\HttpException;
 use LiteFrame\Http\Middlewares\ValidateCSRFToken;
@@ -14,7 +14,7 @@ define('ENV_PATH', 'components/env.php');
  * @param string $key
  * @param string $default
  *
- * @return string
+ * @return string|array
  */
 function appEnv($key = null, $default = null)
 {
@@ -71,16 +71,16 @@ function config($key, $default = null)
 /**
  * Include a view as string.
  *
- * @param string $path
+ * @param string $name
  * @param array $data
  *
  * @param bool $return
  * @return string|null
  * @throws Exception
  */
-function includeView($path, $data = [], $return = false)
+function includeView($name, $data = [], $return = false)
 {
-    $content = View::fetch($path, $data);
+    $content = View::fetch($name, $data);
     if ($return) {
         return $content;
     } else {
@@ -91,20 +91,20 @@ function includeView($path, $data = [], $return = false)
 /**
  * Return a view.
  *
- * @param type $path
- * @param type $data
+ * @param string $name
+ * @param array $data
  *
  * @return Response
  */
-function view($path, $data = [])
+function view($name, $data = [])
 {
-    return Response::getInstance()->view($path, $data);
+    return Response::getInstance()->view($name, $data);
 }
 
 /**
  * Abort with response code.
  *
- * @param type $code
+ * @param int $code
  * @param string $message
  * @throws HttpException
  */
@@ -116,8 +116,10 @@ function abort($code, $message = '')
 /**
  * Abort with response code if condition is true.
  *
- * @param type $code
- * @param type $message
+ * @param $condition
+ * @param int $code
+ * @param string $message
+ * @throws HttpException
  */
 function abort_if($condition, $code, $message = '')
 {
@@ -129,8 +131,10 @@ function abort_if($condition, $code, $message = '')
 /**
  * Abort with response code unless condition is true.
  *
- * @param type $code
- * @param type $message
+ * @param $condition
+ * @param int $code
+ * @param string $message
+ * @throws HttpException
  */
 function abort_unless($condition, $code, $message = '')
 {
@@ -142,7 +146,10 @@ function abort_unless($condition, $code, $message = '')
 /**
  * Get current route.
  *
- * @return string
+ * @param string $routeName
+ * @param array $params
+ * @return string|\LiteFrame\Http\Routing\Route
+ * @throws Exception
  */
 function route($routeName = null, $params = array())
 {
@@ -156,13 +163,14 @@ function route($routeName = null, $params = array())
 /**
  * Check if route is current route.
  *
- * @param type $route
+ * @param string $route
  *
- * @return bool
+ * @return boolean
+ * @throws Exception
  */
 function isRoute($route)
 {
-    $r = route();
+    $r = Request::getInstance()->getRoute();
     if ($r) {
         return $r->getName() === $route || $r->getRouteURI() === $route;
     }
@@ -173,8 +181,8 @@ function isRoute($route)
 /**
  * Get input from request.
  *
- * @param type $key
- * @param type $default
+ * @param string $key
+ * @param string $default
  *
  * @return mixed
  */
@@ -187,10 +195,10 @@ function input($key = null, $default = null)
 /**
  * Get request.
  *
- * @param type $key
- * @param type $default
+ * @param string $key
+ * @param string $default
  *
- * @return Request
+ * @return Request|array|string
  */
 function request($key = null, $default = null)
 {
@@ -205,8 +213,8 @@ function request($key = null, $default = null)
 /**
  * Get response.
  *
- * @param type $content
- * @param type $code
+ * @param string $content
+ * @param int $code
  *
  * @return Response
  */
@@ -235,7 +243,7 @@ if (!function_exists('d')) {
 /**
  * Get absolute URL to this path.
  *
- * @param type $path
+ * @param string $path
  *
  * @return string
  */
@@ -253,7 +261,7 @@ function url($path = '/')
 /**
  * Get asset URL.
  *
- * @param type $path
+ * @param string $path
  *
  * @return string
  */
@@ -267,9 +275,8 @@ function asset($path = '')
 /**
  * Get storage URL.
  *
- * @param type $uri
- *
- * @return type
+ * @param string $uri
+ * @return string
  */
 function publicStorageURL($uri = '/')
 {
@@ -278,24 +285,35 @@ function publicStorageURL($uri = '/')
     return url($folder . '/' . trim($uri, '/'));
 }
 
-function storagePath($path = '', $section = 'public')
+/**
+ * @param null $path path to file in storage
+ * @param null $context set to public to access public storage, this is the same as calling `publicStoragePath()` or
+ * set to private to access private storage, this is the same as calling `privateStoragePath()`
+ * @return string
+ */
+function storagePath($path = null, $context = null)
 {
     $storage_path = config('app.storage', 'storage');
-    if ($section) {
-        $storage_path = nPath($storage_path, $section);
+    if ($path) {
+        $storage_path = nPath($storage_path, $path);
     }
 
-    return basePath(nPath($storage_path, $path));
+    if($context){
+        $callable = $context.'StoragePath';
+        return $callable($storage_path);
+    }else {
+        return basePath($storage_path);
+    }
 }
 
-function privateStoragePath($path, $context = '')
+function privateStoragePath($path = null)
 {
-    return storagePath(nPath($path, $context), 'private');
+    return storagePath(nPath('private', $path));
 }
 
-function publicStoragePath($path, $context = '')
+function publicStoragePath($path = null)
 {
-    return storagePath(nPath($path, $context), 'public');
+    return storagePath(nPath('public',$path));
 }
 
 /**
@@ -377,12 +395,12 @@ function pathToDot($path)
  */
 function requireAll($dir, $recursive = true, $suffix = '.php')
 {
-    $ndir = fixPath($dir);
-    if (!file_exists($ndir)) {
+    $nDir = fixPath($dir);
+    if (!file_exists($nDir)) {
         return;
     }
 
-    $files = scandir($ndir);
+    $files = scandir($nDir);
     foreach ($files as $file) {
         if ($file === '.' || $file === '..') {
             continue;
@@ -390,18 +408,28 @@ function requireAll($dir, $recursive = true, $suffix = '.php')
 
         $path = $dir . DS . $file;
         if ($recursive && is_dir($path)) {
-            require_all($path, $recursive, $suffix);
+            requireAll($path, $recursive, $suffix);
         } elseif (empty($suffix) || strEndsWith($file, $suffix)) {
             require_once $path;
         }
     }
 }
 
+/**
+ * Replaces backslashes (\) with forward slashes (/) in URLs
+ * @param $url
+ * @return mixed
+ */
 function fixUrl($url)
 {
     return str_replace('\\', '/', urldecode($url));
 }
 
+/**
+ * Properly fixes the appropriate directory separator for the path
+ * @param $path
+ * @return mixed
+ */
 function fixPath($path)
 {
     $cds = DS === '/' ? '\\' : '/';
@@ -409,6 +437,12 @@ function fixPath($path)
     return str_replace($cds, DS, $path);
 }
 
+/**
+ * Fixes / and \ issues in namespaces
+ * @param $namespace
+ * @param string $class
+ * @return string
+ */
 function fixClassname($namespace, $class = null)
 {
     $ns = rtrim(str_replace('/', '\\', $namespace), '\\');
@@ -496,8 +530,8 @@ function cast($destination, $sourceObject)
 /**
  * Copy array to object
  * @param array $array
- * @param type $className
- * @return type
+ * @param string $className
+ * @return object
  */
 function arrayToObject(array $array, $className)
 {
@@ -507,18 +541,10 @@ function arrayToObject(array $array, $className)
 }
 
 /**
- * Copy object to another object
- * @param type $instance
- * @param type $className
- * @return type
+ * @param $string
+ * @return array
+ * @throws Exception
  */
-function objectToObject($instance, $className)
-{
-    return unserialize(sprintf(
-                    'O:%d:"%s"%s', strlen($className), $className, strstr(strstr(serialize($instance), '"'), ':')
-    ));
-}
-
 function getClassAndMethodFromString($string)
 {
     if (!preg_match(Router::TARGET_REGEX, $string)) {
@@ -554,22 +580,60 @@ function e($string)
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false);
 }
 
-function csrf_field()
+/**
+ * Get CSRF token field for forms
+ * @return string
+ * @deprecated
+ */
+function csrf_field(){
+    return csrfField();
+}
+
+/**
+ * Get CSRF token field for forms
+ * @return string
+ */
+function csrfField()
 {
     $key = ValidateCSRFToken::$tokenKey;
     return "<input name='{$key}' value='" . csrf_token() . "' hidden>";
 }
 
-function csrf_token()
+/**
+ * Get CSRF token
+ * @return mixed
+ * @deprecated
+ */
+function csrf_token(){
+    return csrfToken();
+}
+
+
+/**
+ * Get CSRF token
+ * @return mixed
+ */
+function csrfToken()
 {
     return ValidateCSRFToken::getSessionToken();
 }
 
+/**
+ * Get HTTP message for the given HTTP code
+ * @param $code
+ * @return string
+ */
 function getHttpResponseMessage($code)
 {
     return Response::getInstance()->getHttpResponseMessage($code);
 }
 
+/**
+ * Return a redirect response
+ * @param $new_location
+ * @param int $code
+ * @return Response
+ */
 function redirect($new_location, $code = 302)
 {
     return response()->redirect($new_location, $code);
