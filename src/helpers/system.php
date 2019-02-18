@@ -306,6 +306,10 @@ function storagePath($path = null, $context = null)
     }
 }
 
+function logsStoragePath($path = null)
+{
+    return storagePath(nPath('system/logs', $path));
+}
 function privateStoragePath($path = null)
 {
     return storagePath(nPath('private', $path));

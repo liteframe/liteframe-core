@@ -226,7 +226,7 @@ class Logger
                 break;
         }
 
-        $dir = storagePath('', 'logs');
+        $dir = logsStoragePath();
         if (!file_exists($dir)) {
             mkdir($dir, 0775);
 
