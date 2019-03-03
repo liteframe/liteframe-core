@@ -6,7 +6,7 @@ use LiteFrame\Utility\SimpleCURL;
 class SimpleCURLTest extends TestCase
 {
 
-    public function setUp()
+    public function setUp() : void
     {
         if(!$this->isOnline()){
             $this->markTestSkipped();
