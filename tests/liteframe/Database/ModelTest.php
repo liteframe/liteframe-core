@@ -8,7 +8,7 @@ class ModelTest extends TestCase {
     protected $model;
     public static $fired = [];
 
-    public function setUp() {
+    public function setUp() : void{
         include_once __DIR__ . '/SampleModel.php';
 
         $this->model = SampleModel::dispense();

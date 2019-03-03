@@ -8,7 +8,7 @@ class Collection implements \Iterator, \ArrayAccess, \Countable
     protected $maps = [];
     protected $mapped = [];
 
-    public function __construct($items)
+    public function __construct($items = [])
     {
         $this->setItems($items);
     }

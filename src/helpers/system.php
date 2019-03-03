@@ -37,35 +37,14 @@ function appEnv($key = null, $default = null)
 /**
  * Get application configuration.
  *
- * @param string $key
+ * @param string $name
  * @param string $default
  *
  * @return string
  */
-function config($key, $default = null)
+function config($name, $default = null)
 {
-    $keys = explode('.', $key);
-    if (is_array($keys)) {
-        $file = $keys[0];
-        $keys = array_slice($keys, 1);
-    } else {
-        $file = $key;
-    }
-
-    $path = basePath("components/config/$file.php");
-    if (!file_exists($path)) {
-        return $default;
-    }
-
-    $value = (array) require $path;
-    foreach ($keys as $key) {
-        if (isset($value[$key])) {
-            $value = $value[$key];
-        } else {
-            return $default;
-        }
-    }
-    return $value;
+    return \LiteFrame\Storage\Config::get($name,$default);
 }
 
 /**
@@ -250,11 +229,16 @@ if (!function_exists('d')) {
 function url($path = '/')
 {
     $request = Request::getInstance();
-    $host = rtrim($request->getAppURL(), '/');
+    if (isCLI()) {
+        $host = appEnv('APP_URL','http://localhost/');
+    }else{
+        $host = rtrim($request->getAppURL(), '/');
+    }
+
     if (empty($path) || $path === '/') {
         return $host;
     } else {
-        return fixUrl($host . '/' . trim($path, '/'));
+        return fixUrl(rtrim($host, '/')  . '/' . trim($path, '/'));
     }
 }
 
@@ -268,8 +252,11 @@ function url($path = '/')
 function asset($path = '')
 {
     $folder = config('app.assets', 'assets');
-
-    return url($folder . '/' . trim($path, '/'));
+    if (filter_var($folder, FILTER_VALIDATE_URL)) {
+        return rtrim($folder, '/') . '/' . $path;
+    } else {
+        return url(rtrim($folder, '/') . '/' . trim($path, '/'));
+    }
 }
 
 /**
@@ -641,4 +628,27 @@ function getHttpResponseMessage($code)
 function redirect($new_location, $code = 302)
 {
     return response()->redirect($new_location, $code);
+}
+
+/**
+ * Fetch value in an array at the specified key using dot notation
+ * @param array $array Array to search in
+ * @param $key Key in dot notation eg. key1.key2.key3
+ * @param mixed $default
+ * @return mixed
+ */
+function arrayDotSearch(array $array,  $key, $default = null)
+{
+    $keys = explode('.', $key);
+
+    $value = $array;
+    foreach ($keys as $key) {
+        if (isset($value[$key])) {
+            $value = $value[$key];
+        } else {
+            return $default;
+        }
+    }
+
+    return $value;
 }

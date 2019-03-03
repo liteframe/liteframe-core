@@ -39,4 +39,13 @@ class SystemTest extends TestCase
         $this->assertEquals('http://url/to/file.com', $fURL);
 
     }
+
+    public function testAsset(){
+        $URL = asset('css/sample.css');
+        $this->assertEquals('http://localhost/assets/css/sample.css', $URL);
+        //Use a full URL
+        \LiteFrame\Storage\Config::set('app.assets', 'http://fake-cdn.com');
+        $URL = asset('css/sample.css');
+        $this->assertEquals('http://fake-cdn.com/css/sample.css', $URL);
+    }
 }
