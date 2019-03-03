@@ -1,7 +1,7 @@
-vendor/
+/vendor/
 .DS_Store
-nbproject/
-.idea/
+/nbproject/
+/.idea/
 /.php_cs.cache
 composer.lock
-storage/
+/storage/
