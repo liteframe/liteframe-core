@@ -41,8 +41,8 @@ class UploadedFile
     {
         $folder = $public ? 'public' : 'private';
         if ($path) {
-            if (!file_exists(storagePath($path))) {
-                mkdir(storagePath($path), 0777, true);
+            if (!file_exists(storagePath($path, $folder))) {
+                mkdir(storagePath($path, $folder), 0777, true);
             }
             $savePath = storagePath(nPath($path, $name), $folder);
         } else {
