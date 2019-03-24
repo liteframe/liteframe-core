@@ -14,9 +14,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Future release
 
 - Use of vendor App\\ in namespace for application controllers, models, middlewares and commands 
-- Modularity (through composer)
 - Dependency injection
-- Multi ORM support
+- Modularity (through composer and DI)
+- Multi ORM support (through DI)
+
+
+## [0.2.1] - 2019-03-04
+
+### Fixed
+
+- CDNs can now be used with `asset()`
+
+## [0.2.0] - 2019-02-18
+### Added
+
+- Blade templating Support
 
 
 ## [0.1.6] - 2018-12-12
@@ -81,10 +93,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial release
 
-[Unreleased]: https://github.com/liteframe/liteframe-core/compare/v0.1.6...HEAD
+[Unreleased]: https://github.com/liteframe/liteframe-core/compare/v0.2.0...HEAD
 [0.1.1]: https://github.com/liteframe/liteframe-core/compare/v0.1.0...v0.1.1
 [0.1.2]: https://github.com/liteframe/liteframe-core/compare/v0.1.1...v0.1.2
 [0.1.3]: https://github.com/liteframe/liteframe-core/compare/v0.1.2...v0.1.3
 [0.1.4]: https://github.com/liteframe/liteframe-core/compare/v0.1.3...v0.1.4
 [0.1.5]: https://github.com/liteframe/liteframe-core/compare/v0.1.4...v0.1.5
 [0.1.6]: https://github.com/liteframe/liteframe-core/compare/v0.1.5...v0.1.6
+[0.2.0]: https://github.com/liteframe/liteframe-core/compare/v0.1.6...v0.2.0
