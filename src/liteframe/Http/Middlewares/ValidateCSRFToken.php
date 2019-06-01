@@ -36,9 +36,10 @@ class ValidateCSRFToken extends Middleware
      * Handle an incoming request.
      *
      * @param Closure $next
-     * @param Request  $request
+     * @param Request $request
      *
      * @return mixed
+     * @throws \LiteFrame\Exception\Exceptions\HttpException
      */
     public function run(Closure $next = null, Request $request = null)
     {
