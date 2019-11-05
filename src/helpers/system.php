@@ -280,15 +280,12 @@ function publicStorageURL($uri = '/')
  */
 function storagePath($path = null, $context = null)
 {
-    $storage_path = config('app.storage', 'storage');
-    if ($path) {
-        $storage_path = nPath($storage_path, $path);
-    }
-
     if($context){
         $callable = $context.'StoragePath';
-        return $callable($storage_path);
+        return $callable($path);
     }else {
+        $storage_path = config('app.storage', 'storage');
+        $storage_path = nPath($storage_path, $path);
         return basePath($storage_path);
     }
 }

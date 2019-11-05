@@ -191,7 +191,6 @@ class Logger
 
     private function getContentForFile()
     {
-        $content = '';
         if ($this->exception instanceof Exception) {
             $content = $this->exception->getMessage() . PHP_EOL;
             if ($this->outputMedium !== static::MEDIUM_STDOUT) {
