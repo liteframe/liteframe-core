@@ -309,9 +309,9 @@ final class Kernel
             $errorPage->addDataTable("Application Environment Details", appEnv());
         }
 
-        $whoops->pushHandler($errorPage);
+        $whoops->appendHandler($errorPage);
         //We also add additional handler to handle logging to file and setting proper HTTP code for the error
-        $whoops->pushHandler(function ($exception, Inspector $inspector, RunInterface $run) use ($errorPage) {
+        $whoops->appendHandler(function ($exception, Inspector $inspector, RunInterface $run) use ($errorPage) {
             if ($exception instanceof HttpException) {
                 $run->sendHttpCode($exception->getHttpCode());
             } else {
